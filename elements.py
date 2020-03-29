@@ -1,11 +1,11 @@
 # start
 
 
-class ProjectElements:
+class ProjectElement:
     pass
 
 
-class Node(ProjectElements):
+class Node(ProjectElement):
     _list_of_nodes = []
 
     def __init__(self, name, start_date, completion_date):
@@ -37,17 +37,6 @@ class Node(ProjectElements):
             raise Exception("Invalid node type")
 
 
-class Container(ProjectElements):
-    @staticmethod
-    def factory(type_, *args):
-        if type_ == "Lane":
-            return Lane(*args)
-        elif type_ == "Project":
-            return Project(*args)
-        else:
-            raise Exception("Invalid container type")
-
-
 class Gate(Node):
     def __init__(self, name, start_date, completion_date):
         super().__init__(name, start_date, completion_date)
@@ -63,18 +52,71 @@ class Task(Node):
         return minimum_duration + (maximum_duration - minimum_duration) * workload
 
 
+class Container(ProjectElement):
+    def __init__(self):
+        self._container = []
+        self._precedence_constraints = PrecedenceConstraintsContainer()
+
+    @property
+    def container(self):
+        return self._container
+
+    @staticmethod
+    def factory(type_, *args):
+        if type_ == "Lane":
+            return Lane(*args)
+        elif type_ == "Project":
+            return Project(*args)
+        else:
+            raise Exception("Invalid container type")
+
+    def add_node(self, *args, **kwargs):
+        type_ = args[0]
+        args = args[1:]
+        node = Node.factory(args[0], *args)
+        self.container.append(node)
+        self._precedence_constraints.add_constraint()
+
+
 class Lane(Container):
     def __init__(self, name, workload):
+        super().__init__()
         self._name = name
         self._workload = workload
 
 
 class Project(Container):
     def __init__(self, name):
+        super().__init__()
         self._name = name
 
+    def add_lane(self, *args):
+        lane = Lane(*args)
+        self.container.append(lane)
 
-class PrecedenceConstraint(ProjectElements):
+
+class PrecedenceConstraintsContainer(ProjectElement):
+
+    def __init__(self):
+        self._container = {}
+
+    @property
+    def container(self):
+        return self._container
+
+    def add_constraint(self, source: Node, target: Node):
+        self.container[source]["To"] = target
+        self.container[target]["From"] = source
+
+    def remove_constraint(self, source):
+        previous = self.container[source]["From"]
+        next_ = self.container[source]["To"]
+        self.container[previous]["To"] = next_
+        self.container[next_]["From"] = previous
+        del self.container[source]
+
+
+class PrecedenceConstraint(ProjectElement):
     precedence_constraints = {}
 
     def __init__(self, source: Node, target: Node):
@@ -103,4 +145,3 @@ class PrecedenceConstraint(ProjectElements):
     @property
     def target(self):
         return self._target
-
