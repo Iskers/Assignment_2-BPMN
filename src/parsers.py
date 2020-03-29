@@ -1,7 +1,6 @@
-import file_handler as fh
-import path_finder as pf
 import xml.etree.ElementTree as et
 
+from src import file_handler as fh, path_finder as pf
 import elements
 
 

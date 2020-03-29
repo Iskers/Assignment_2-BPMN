@@ -1,4 +1,5 @@
 # start
+import simulation_tools as st
 
 
 class ProjectElement:
@@ -8,24 +9,25 @@ class ProjectElement:
 class Node(ProjectElement):
     _list_of_nodes = []
 
-    def __init__(self, name, start_date, completion_date):
+    def __init__(self, name, start_date, completion_date, project_nodes):
         self._name = name
         self._start_date = start_date
         self._completion_date = completion_date
-        self._list_of_nodes.append(self)
+        self._project_nodes = project_nodes
+        self._project_nodes.append(self)
 
     def __del__(self):
-        self._list_of_nodes.remove(self)
+        self._project_nodes.remove(self)
 
     @property
     def predecessors(self):
-        index = self._list_of_nodes.index(self)
-        return self._list_of_nodes[:index]
+        index = self._project_nodes.index(self)
+        return self._project_nodes[:index]
 
     @property
     def successors(self):
-        index = self._list_of_nodes.index(self)
-        return self._list_of_nodes[index:]
+        index = self._project_nodes.index(self)
+        return self._project_nodes[index:]
 
     @staticmethod
     def factory(type_, *args):
@@ -38,19 +40,31 @@ class Node(ProjectElement):
 
 
 class Gate(Node):
-    def __init__(self, name, start_date, completion_date):
-        super().__init__(name, start_date, completion_date)
+    def __init__(self, name, start_date, completion_date, project_nodes):
+        super().__init__(name, start_date, completion_date, project_nodes)
 
 
 class Task(Node):
-    def __init__(self, name, minimum_duration, maximum_duration, workload):
-        super().__init__(name)
-        self._expected_duration = self.calculate_expected_duration(minimum_duration, maximum_duration, workload)
+    def __init__(self, name, start_date, completion_date, project_nodes, minimum_duration, maximum_duration):
+        super().__init__(name, start_date, completion_date, project_nodes)
+        self.minimum_duration = minimum_duration
+        self.maximum_duration = maximum_duration
+        self._expected_duration = -1
+        self._duration = -1
 
-    @staticmethod
-    def calculate_expected_duration(minimum_duration, maximum_duration, workload):
-        return minimum_duration + (maximum_duration - minimum_duration) * workload
+    @property
+    def duration(self):
+        if self._duration < 0:
+            return self.generate_duration()
+        else:
+            return self._duration
 
+    def generate_expected_duration(self, workload):
+        return self.minimum_duration + (self.maximum_duration - self.minimum_duration) * workload
+
+    def generate_duration(self):
+
+        st.DurationGenerators.task_duration_generator(self, )
 
 class Container(ProjectElement):
     def __init__(self):
