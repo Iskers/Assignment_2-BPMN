@@ -124,8 +124,24 @@ class BPMNParser(Parser):
             project = elements.Project(root.attrib["name"])
 
         for child in root:
-            type_ = child.tag
-            part = cir.Part.factory_function(type_=type_, **child.attrib)
-            project.add_part(part)
+            self._xml_recursive(project, child)
+        return project
 
-        return circuit
+    def _xml_recursive(self, context: elements.Container, root):
+        type_ = root.tag
+        if type_ == "precedence-constraint":
+            context.add_constraint(source=root.attrib["source"], target=root.attrib["target"])
+            return
+        if type_ == "lane":
+            context.add_lane(*root.attrib)
+            # a = list(root)
+            for child in root:
+                self._xml_recursive(context, child)
+        elif type_ == "gate":
+            context.add_node("Gate", *root.attrib)
+            return
+        elif type_ == "task":
+            context.add_node("Task", *root.attrib)
+            return
+        else:
+            raise Exception("Invalid type")

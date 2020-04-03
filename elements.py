@@ -9,10 +9,10 @@ class ProjectElement:
 class Node(ProjectElement):
     _list_of_nodes = []
 
-    def __init__(self, name, start_date, completion_date, project_nodes):
+    def __init__(self, name, project_nodes):
         self._name = name
-        self._start_date = start_date
-        self._completion_date = completion_date
+        self._start_date = -1
+        self._completion_date = -1
         self._project_nodes = project_nodes
         self._project_nodes.append(self)
 
@@ -27,7 +27,7 @@ class Node(ProjectElement):
     @property
     def successors(self):
         index = self._project_nodes.index(self)
-        return self._project_nodes[index:]
+        return self._project_nodes[index+1:]
 
     @staticmethod
     def factory(type_, *args):
@@ -40,40 +40,62 @@ class Node(ProjectElement):
 
 
 class Gate(Node):
-    def __init__(self, name, start_date, completion_date, project_nodes):
-        super().__init__(name, start_date, completion_date, project_nodes)
+    def __init__(self, name, project_nodes):
+        super().__init__(name, project_nodes)
 
 
 class Task(Node):
-    def __init__(self, name, start_date, completion_date, project_nodes, minimum_duration, maximum_duration):
-        super().__init__(name, start_date, completion_date, project_nodes)
+    def __init__(self, name, project_nodes, minimum_duration, maximum_duration):
+        super().__init__(name, project_nodes)
         self.minimum_duration = minimum_duration
         self.maximum_duration = maximum_duration
         self._expected_duration = -1
         self._duration = -1
 
+    # Can only be generated in a lane context
     @property
     def duration(self):
         if self._duration < 0:
-            return self.generate_duration()
+            raise Exception("No duration")
         else:
             return self._duration
+
+    @duration.setter
+    def duration(self, value):
+        self._duration = value
 
     def generate_expected_duration(self, workload):
         return self.minimum_duration + (self.maximum_duration - self.minimum_duration) * workload
 
-    def generate_duration(self):
+    def generate_duration(self, workload):
+        expected_duration = self.generate_expected_duration(workload)
+        duration = st.DurationGenerators.task_duration_generator(self.minimum_duration, self.maximum_duration,
+                                                                 expected_duration)
+        self.duration = duration
 
-        st.DurationGenerators.task_duration_generator(self, )
 
 class Container(ProjectElement):
-    def __init__(self):
+    def __init__(self, name):
+        self._name = name
         self._container = []
         self._precedence_constraints = PrecedenceConstraintsContainer()
+        self._nodes = []
 
     @property
     def container(self):
         return self._container
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def nodes(self):
+        return self._nodes
+
+    @property
+    def precedence_constraints(self):
+        return self._precedence_constraints
 
     @staticmethod
     def factory(type_, *args):
@@ -87,22 +109,32 @@ class Container(ProjectElement):
     def add_node(self, *args, **kwargs):
         type_ = args[0]
         args = args[1:]
-        node = Node.factory(args[0], *args)
+        node = Node.factory(type_, *args, self.nodes)
         self.container.append(node)
-        self._precedence_constraints.add_constraint()
+
+    def add_constraint(self, source, target):
+        self.precedence_constraints.add_constraint(source, target)
+
+    def add_lane(self, param):
+        pass
 
 
 class Lane(Container):
-    def __init__(self, name, workload):
-        super().__init__()
-        self._name = name
-        self._workload = workload
+    def __init__(self, name):
+        super().__init__(name)
+        self._workload = -1
+
+    @property
+    def workload(self):
+        if self._workload < 0:
+            st.DurationGenerators.lane_workload_generator(self)
+        else:
+            return self._workload
 
 
 class Project(Container):
     def __init__(self, name):
-        super().__init__()
-        self._name = name
+        super().__init__(name)
 
     def add_lane(self, *args):
         lane = Lane(*args)
@@ -110,7 +142,6 @@ class Project(Container):
 
 
 class PrecedenceConstraintsContainer(ProjectElement):
-
     def __init__(self):
         self._container = {}
 
