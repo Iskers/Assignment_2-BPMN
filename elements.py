@@ -19,6 +19,13 @@ class Node(ProjectElement):
     def __del__(self):
         self._project_nodes.remove(self)
 
+    def __str__(self):
+        return self.name
+
+    @property
+    def name(self):
+        return self._name
+
     @property
     def predecessors(self):
         index = self._project_nodes.index(self)
@@ -27,14 +34,14 @@ class Node(ProjectElement):
     @property
     def successors(self):
         index = self._project_nodes.index(self)
-        return self._project_nodes[index+1:]
+        return self._project_nodes[index + 1:]
 
     @staticmethod
-    def factory(type_, *args):
+    def factory(type_, **kwargs):
         if type_ == "Gate":
-            return Gate(*args)
+            return Gate(**kwargs)
         elif type_ == "Task":
-            return Task(*args)
+            return Task(**kwargs)
         else:
             raise Exception("Invalid node type")
 
@@ -45,7 +52,7 @@ class Gate(Node):
 
 
 class Task(Node):
-    def __init__(self, name, project_nodes, minimum_duration, maximum_duration):
+    def __init__(self, name, minimum_duration, maximum_duration, project_nodes):
         super().__init__(name, project_nodes)
         self.minimum_duration = minimum_duration
         self.maximum_duration = maximum_duration
@@ -106,11 +113,18 @@ class Container(ProjectElement):
         else:
             raise Exception("Invalid container type")
 
-    def add_node(self, *args, **kwargs):
-        type_ = args[0]
-        args = args[1:]
-        node = Node.factory(type_, *args, self.nodes)
+    def add_node(self, **kwargs):
+        kwargs = self.key_treatment(kwargs)
+        node = Node.factory(**kwargs, project_nodes=self.nodes)
         self.container.append(node)
+
+    @staticmethod
+    def key_treatment(dictionary):
+        for key in dictionary:
+            if "-" in key:
+                temp_name = key.replace("-", "_")
+                dictionary[temp_name] = dictionary.pop(key)
+        return dictionary
 
     def add_constraint(self, source, target):
         self.precedence_constraints.add_constraint(source, target)
@@ -150,8 +164,12 @@ class PrecedenceConstraintsContainer(ProjectElement):
         return self._container
 
     def add_constraint(self, source: Node, target: Node):
-        self.container[source]["To"] = target
-        self.container[target]["From"] = source
+        if source not in self.container:
+            self.container[source] = {"To": [], "From": []}
+        if target not in self.container:
+            self.container[target] = {"To": [], "From": []}
+        self.container[source]["To"].append(target)
+        self.container[target]["From"].append(source)
 
     def remove_constraint(self, source):
         previous = self.container[source]["From"]
@@ -159,6 +177,9 @@ class PrecedenceConstraintsContainer(ProjectElement):
         self.container[previous]["To"] = next_
         self.container[next_]["From"] = previous
         del self.container[source]
+
+    def __getitem__(self, item):
+        return self.container[item]
 
 
 class PrecedenceConstraint(ProjectElement):

@@ -138,10 +138,10 @@ class BPMNParser(Parser):
             for child in root:
                 self._xml_recursive(context, child)
         elif type_ == "gate":
-            context.add_node("Gate", *root.attrib)
+            context.add_node(type_="Gate", **root.attrib)
             return
         elif type_ == "task":
-            context.add_node("Task", *root.attrib)
+            context.add_node(type_="Task", **root.attrib)
             return
         else:
             raise Exception("Invalid type")
