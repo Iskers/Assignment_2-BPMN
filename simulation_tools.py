@@ -37,3 +37,6 @@ class DurationGenerators(Generators):
 
 class MonteCarloSimulation:
     pass
+
+    def __init__(self):
+        pass
