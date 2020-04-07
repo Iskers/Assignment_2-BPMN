@@ -17,3 +17,4 @@ class TestBPMNParser(TestCase):
 
     def test__xml_recursive(self):
         self.parser.parse("ControlSystemProject.xml", "xml", False)
+        pass

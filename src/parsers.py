@@ -133,10 +133,9 @@ class BPMNParser(Parser):
             context.add_constraint(source=root.attrib["source"], target=root.attrib["target"])
             return
         if type_ == "lane":
-            context.add_lane(*root.attrib)
-            # a = list(root)
+            lane = context.add_lane(**root.attrib)
             for child in root:
-                self._xml_recursive(context, child)
+                self._xml_recursive(lane, child)
         elif type_ == "gate":
             context.add_node(type_="Gate", **root.attrib)
             return
