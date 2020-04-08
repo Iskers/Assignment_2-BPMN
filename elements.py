@@ -1,5 +1,5 @@
 # start
-import simulation_tools as st
+# import simulation_tools as st
 
 
 class ProjectElement:
@@ -90,7 +90,7 @@ class Container(ProjectElement):
         self._name = name
         self._container = []
         self._precedence_constraints = PrecedenceConstraintsContainer()
-        self._nodes = []
+        self._project_nodes = []
 
     def __str__(self):
         return self.name
@@ -107,8 +107,8 @@ class Container(ProjectElement):
         return self._name
 
     @property
-    def nodes(self):
-        return self._nodes
+    def project_nodes(self):
+        return self._project_nodes
 
     @property
     def precedence_constraints(self):
@@ -125,7 +125,7 @@ class Container(ProjectElement):
 
     def add_node(self, **kwargs):
         kwargs = self.key_treatment(kwargs)
-        node = Node.factory(**kwargs, project_nodes=self.nodes)
+        node = Node.factory(**kwargs, project_nodes=self.project_nodes)
         self.container.append(node)
 
     @staticmethod
@@ -145,9 +145,11 @@ class Container(ProjectElement):
 
 
 class Lane(Container):
-    def __init__(self, name):
+    def __init__(self, name, project_nodes):
         super().__init__(name)
+        self._project_nodes = project_nodes
         self._workload = -1
+
 
     # Todo remove
     '''
@@ -164,7 +166,7 @@ class Project(Container):
         super().__init__(name)
 
     def add_lane(self, **kwargs):
-        lane = Lane(**kwargs)
+        lane = Lane(project_nodes=self.project_nodes, **kwargs)
         self.container.append(lane)
         return lane
 

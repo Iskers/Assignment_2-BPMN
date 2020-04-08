@@ -1,4 +1,8 @@
 import random
+import numpy
+import sklearn
+
+
 import elements
 
 
@@ -38,6 +42,18 @@ class DurationGenerators(Generators):
         return random.random()
 
 
+class DateGenerator(Generators):
+    duration_generator = DurationGenerators()
+
+    def generate_start_date(self, node):
+        pass
+
+    def generate_completion_date(self, node):
+        pass
+
 class MonteCarloSimulation:
     def __init__(self):
         pass
+
+
+    def linear_study(self, ):

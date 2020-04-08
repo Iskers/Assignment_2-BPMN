@@ -13,7 +13,7 @@ class Checker:
         """
         start = 0
         stop = 0
-        for node in project.nodes:
+        for node in project.project_nodes:
             if isinstance(node, ele.Gate):
                 if len(project.precedence_constraints[node.name]["From"]) < 1:
                     start += 1
@@ -28,7 +28,7 @@ class Checker:
 
     @staticmethod
     def check_lane(lane, start, stop):
-        for node in lane.nodes:
+        for node in lane.project_nodes:
             if isinstance(node, ele.Gate):
                 if len(lane.precedence_constraints[node.name]["From"]) < 1:
                     start += 1
