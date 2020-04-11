@@ -1,5 +1,4 @@
 # start
-# import simulation_tools as st
 
 
 class ProjectElement:
@@ -7,34 +6,67 @@ class ProjectElement:
 
 
 class Node(ProjectElement):
+    # todo remove
     _list_of_nodes = []
 
     def __init__(self, name, project_nodes):
         self._name = name
         self._start_date = -1
         self._completion_date = -1
-        self._project_nodes = project_nodes
-        self._project_nodes.append(self)
+        self._predecessors = []
+        self._successors = []
 
-    def __del__(self):
-        self._project_nodes.remove(self)
+        self._project_nodes = project_nodes
+        self._project_nodes[self.name] = self
+
+#    def __del__(self):
+#        del self._project_nodes[self]
 
     def __str__(self):
         return self.name
+
+    def __repr__(self):
+        return f"{type(self).__name__} {self.name}"
 
     @property
     def name(self):
         return self._name
 
     @property
+    def start_date(self):
+        return self._start_date
+
+    @start_date.setter
+    def start_date(self, value):
+        self._start_date = value
+
+    @property
+    def completion_date(self):
+        return self._completion_date
+
+    @completion_date.setter
+    def completion_date(self, value):
+        self._completion_date = value
+
+    @property
     def predecessors(self):
-        index = self._project_nodes.index(self)
-        return self._project_nodes[:index]
+        index = self._predecessors.index(self)
+        return self._predecessors[:index]
+
+    @predecessors.setter
+    def predecessors(self, value):
+        self._predecessors = value
+        self._predecessors.append(self)
 
     @property
     def successors(self):
         index = self._project_nodes.index(self)
         return self._project_nodes[index + 1:]
+
+    @successors.setter
+    def successors(self, value):
+        self._successors = value
+        self._successors.append(self)
 
     @staticmethod
     def factory(type_, **kwargs):
@@ -57,40 +89,13 @@ class Task(Node):
         self.minimum_duration = float(minimum_duration)
         self.maximum_duration = float(maximum_duration)
 
-    # Todo remove
-    '''
-        self._expected_duration = -1
-        self._duration = -1
-
-    # Can only be generated in a lane context
-    @property
-    def duration(self):
-        if self._duration < 0:
-            raise Exception("No duration")
-        else:
-            return self._duration
-
-    @duration.setter
-    def duration(self, value):
-        self._duration = value
-
-    def generate_expected_duration(self, workload):
-        return self.minimum_duration + (self.maximum_duration - self.minimum_duration) * workload
-
-    def generate_duration(self, workload):
-        self._expected_duration = self.generate_expected_duration(workload)
-        duration = st.DurationGenerators.task_duration_generator(self.minimum_duration, self.maximum_duration,
-                                                                 self._expected_duration)
-        self.duration = duration
-    '''
-
 
 class Container(ProjectElement):
     def __init__(self, name):
         self._name = name
         self._container = []
         self._precedence_constraints = PrecedenceConstraintsContainer()
-        self._project_nodes = []
+        self._project_nodes = {}
 
     def __str__(self):
         return self.name
@@ -151,19 +156,19 @@ class Lane(Container):
         self._workload = -1
 
 
-    # Todo remove
-    '''
-    @property
-    def workload(self):
-        if self._workload < 0:
-            self._workload = st.DurationGenerators.lane_workload_generator(self)
-        return self._workload
-    '''
-
-
 class Project(Container):
     def __init__(self, name):
         super().__init__(name)
+
+    '''
+    def task_predecessor_list_generator(self):
+        for task in self.project_nodes:
+            predecessors = []
+            self.precedence_constraints[task]
+
+            for element in self.container:
+                if isinstance(element, Lane):
+    '''
 
     def add_lane(self, **kwargs):
         lane = Lane(project_nodes=self.project_nodes, **kwargs)

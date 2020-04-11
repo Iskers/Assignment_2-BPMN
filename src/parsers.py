@@ -130,7 +130,9 @@ class BPMNParser(Parser):
     def _xml_recursive(self, context: elements.Container, root):
         type_ = root.tag
         if type_ == "precedence-constraint":
-            context.add_constraint(source=root.attrib["source"], target=root.attrib["target"])
+            source = context.project_nodes[root.attrib["source"]]
+            target = context.project_nodes[root.attrib["target"]]
+            context.add_constraint(source, target)
             return
         if type_ == "lane":
             lane = context.add_lane(**root.attrib)
