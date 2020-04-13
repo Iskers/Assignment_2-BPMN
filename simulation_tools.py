@@ -236,8 +236,12 @@ class LabelStudy:
 
     @classmethod
     def generate_results(cls, predicted_labels, solutions_labels):
+
+        # #0-Successful failures discovered  #1-Successful successes discovered, #2-Successes
         successful_predictions = [0, 0, 0]
         failed_predictions = [0, 0, 0]
+
+        # #0-Failures, #1 - Successes
         solution_data = [0, 0]
         predicted_data = [0, 0]
 
