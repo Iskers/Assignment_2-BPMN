@@ -266,3 +266,32 @@ class LabelStudy:
         return list_
 
 
+class AlgorithmStudy:
+
+    @classmethod
+    def three_algorithms(cls, project, gate_name, date, labels):
+        training_labels, training_sample = LabelStudy.generate_multiple_labels(project,
+                                                             gate_name, date, labels)
+
+        first_model = sklearn.linear_model.LogisticRegression()
+        first_model.fit(training_sample, training_labels)
+        print("Logistic Regression: Training set learned")
+
+        predicted_labels = first_model.predict(training_sample)
+        LabelStudy.generate_results(predicted_labels, training_labels)
+
+        second_model = sklearn.svm.SVC()
+        second_model.fit(training_sample, training_labels)
+
+        second_predicted_labels = second_model.predict(training_sample)
+
+        LabelStudy.generate_results(second_predicted_labels, training_labels)
+
+        third_model = sklearn.neighbors.KNeighborsClassifier()
+
+        # third_model = sklearn.neighbors.KNeighborsClassifier()
+        third_model.fit(training_sample, training_labels)
+
+        third_predicted_labels = third_model.predict(training_sample)
+
+        LabelStudy.generate_results(third_predicted_labels, training_labels)
