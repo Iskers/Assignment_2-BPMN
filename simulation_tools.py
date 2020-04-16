@@ -1,7 +1,10 @@
 import random, numpy, sklearn
 from matplotlib import pyplot
+from sklearn.neural_network import MLPClassifier
+from sklearn.naive_bayes import GaussianNB
 
 import elements
+from src.path_finder import *
 
 
 class Generators:
@@ -180,18 +183,25 @@ class MonteCarloSimulation:
         pass
 
     @classmethod
-    def Monte_Carlo_Basic(cls, project: elements.Project, sim_count):
+    def Monte_Carlo_Basic(cls, project: elements.Project, sim_count, file_name) -> tuple:
+        project_attributes = {}
         durations = cls.generate_project_durations(project, sim_count)
-        mean_duration = durations.mean()
-        standard_deviation = durations.std()
-        minimum_duration = durations.min()
-        maximum_duration = durations.max()
-        quantile_median = numpy.quantile(durations, 0.5)
-        quantile_top = numpy.quantile(durations, 0.9)
+        project_attributes["durations"] = durations
+        project_attributes["mean duration"] = durations.mean()
+        project_attributes["standard deviation"] = durations.std()
+        project_attributes["minimum duration"] = durations.min()
+        project_attributes["maximum duration"] = durations.max()
+        project_attributes["Quantile median"] = numpy.quantile(durations, 0.5)
+        project_attributes["Quantile 0.9"] = numpy.quantile(durations, 0.9)
+
         pyplot.hist(durations, 25)
         pyplot.title("histogram")
-        pyplot.show()
-        pass
+        pyplot.xlabel("Durations")
+        pyplot.ylabel("Cases")
+        path = PathFinder.get_folder_path("templates")
+        file_path = f"{path}/{file_name}"
+        pyplot.savefig(file_path)
+        return file_name, project_attributes
 
     @staticmethod
     def generate_project_durations(project: elements.Project, sim_count):
@@ -239,6 +249,7 @@ class LabelStudy:
 
         # #0-Successful failures discovered  #1-Successful successes discovered, #2-Successes
         successful_predictions = [0, 0, 0]
+        # #0-Failures not discovered  #1-Successes not discovered, #2-Fails
         failed_predictions = [0, 0, 0]
 
         # #0-Failures, #1 - Successes
@@ -271,27 +282,54 @@ class AlgorithmStudy:
     @classmethod
     def three_algorithms(cls, project, gate_name, date, labels):
         training_labels, training_sample = LabelStudy.generate_multiple_labels(project,
-                                                             gate_name, date, labels)
+                                                                               gate_name, date, labels)
 
-        first_model = sklearn.linear_model.LogisticRegression()
+        results = {}
+
+        first_model = GaussianNB()
         first_model.fit(training_sample, training_labels)
         print("Logistic Regression: Training set learned")
 
         predicted_labels = first_model.predict(training_sample)
-        LabelStudy.generate_results(predicted_labels, training_labels)
+        results["Gaussian"] = LabelStudy.generate_results(predicted_labels, training_labels)
 
         second_model = sklearn.svm.SVC()
         second_model.fit(training_sample, training_labels)
 
         second_predicted_labels = second_model.predict(training_sample)
 
-        LabelStudy.generate_results(second_predicted_labels, training_labels)
+        results["SVC"] = LabelStudy.generate_results(second_predicted_labels, training_labels)
 
-        third_model = sklearn.neighbors.KNeighborsClassifier()
-
-        # third_model = sklearn.neighbors.KNeighborsClassifier()
+        third_model = MLPClassifier()
         third_model.fit(training_sample, training_labels)
 
         third_predicted_labels = third_model.predict(training_sample)
 
-        LabelStudy.generate_results(third_predicted_labels, training_labels)
+        results["MLPClassifier"] = LabelStudy.generate_results(third_predicted_labels, training_labels)
+        return results
+
+    @classmethod
+    def dates_with_models(cls, project, gate_name, dates: tuple, labels):
+        results = {}
+        for date in dates:
+            results[date] = cls.three_algorithms(project, gate_name, date, labels)
+        return results
+
+    @classmethod
+    def models_with_dates(cls, project, gate_name, dates: tuple, labels:int):
+        results = {}
+        for date in dates:
+            training_labels, training_sample = LabelStudy.generate_multiple_labels(project, gate_name, date, labels)
+            first_model = GaussianNB()
+            cls.model_run_through(first_model, "Gaussian", results, training_sample, training_labels)
+            second_model = sklearn.svm.SVC()
+            cls.model_run_through(second_model, "SVC", results, training_sample, training_labels)
+            third_model = MLPClassifier()
+            cls.model_run_through(third_model, "MLPClassifier", results, training_sample, training_labels)
+
+    @classmethod
+    def model_run_through(cls, model, model_name: str, results, training_sample, training_labels):
+        model.fit(training_sample, training_labels)
+        predicted_labels = model.predict(training_sample)
+        results[model_name] = LabelStudy.generate_results(training_sample)
+        return results

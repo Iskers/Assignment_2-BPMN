@@ -1,0 +1,94 @@
+body {
+  background-color: antiquewhite;
+  margin: 2.5%;
+  font-family: Helvetica, serif
+}
+
+h1 {
+  background-color: DarkBlue;
+  ;
+  color: White;
+  text-align: center;
+  font-family: Helvetica, serif;
+  font-size: 300%;
+}
+h2 {
+  text-decoration: underline;
+  text-decoration-color: black;
+  color: black;
+}
+h3 {
+  font-size: 120%;
+}
+p {
+  color: black;
+  font-family: Helvetica, serif;
+}
+a {
+  border: 1px solid red;
+  }
+li {
+  font-size: 120%;
+}
+table{
+  border: 1px solid black;
+  border-spacing: 10px;
+  border-collapse: separate;
+  width: 49%;
+}
+tr, td, th{
+  padding: 8px;
+  text-align: left
+}
+th{
+  border: 1px solid black;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 80%;
+}
+td{
+  border: 1px solid black;
+  background-color: white;
+  font-size: 80%;
+}
+
+td#property{
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  font-size: 80%;
+}
+
+table#circuit th{
+  background-color: black;
+}
+td#property:nth-of-type(even){
+  background-color: black;
+  color: white;
+}
+
+td#item_property{
+  color: black;
+  background-color: white;
+}
+td#empty_item_property{
+  background-color: gray;
+}
+div#tables{
+}
+div#model{
+  border: 4px solid black;
+  margin-bottom: 10px;
+  padding: 30px;
+}
+table#table_type{
+  float: left;
+  margin: 10px;
+}
+th#white{
+  opacity: 0;
+}
+img{
+  max-width: 33%;
+  max-height: auto;
+}
