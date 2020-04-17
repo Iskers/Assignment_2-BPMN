@@ -6,8 +6,6 @@ class ProjectElement:
 
 
 class Node(ProjectElement):
-    # todo remove
-    _list_of_nodes = []
 
     def __init__(self, name, project_nodes):
         self._name = name

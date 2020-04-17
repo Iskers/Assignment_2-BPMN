@@ -1,7 +1,11 @@
-import random, numpy, sklearn
+import numpy
+import random
+import sklearn
+
 from matplotlib import pyplot
-from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
 
 import elements
 from src.path_finder import *
@@ -185,12 +189,12 @@ class MonteCarloSimulation:
     @classmethod
     def Monte_Carlo_Basic(cls, project: elements.Project, sim_count, file_name) -> tuple:
         project_attributes = {}
-        durations = cls.generate_project_durations(project, sim_count)
+        durations = cls._generate_project_durations(project, sim_count)
         project_attributes["durations"] = durations
-        project_attributes["mean duration"] = durations.mean()
-        project_attributes["standard deviation"] = durations.std()
-        project_attributes["minimum duration"] = durations.min()
-        project_attributes["maximum duration"] = durations.max()
+        project_attributes["Mean duration"] = durations.mean()
+        project_attributes["Standard deviation"] = durations.std()
+        project_attributes["Minimum duration"] = durations.min()
+        project_attributes["Maximum duration"] = durations.max()
         project_attributes["Quantile median"] = numpy.quantile(durations, 0.5)
         project_attributes["Quantile 0.9"] = numpy.quantile(durations, 0.9)
 
@@ -204,15 +208,12 @@ class MonteCarloSimulation:
         return file_name, project_attributes
 
     @staticmethod
-    def generate_project_durations(project: elements.Project, sim_count):
+    def _generate_project_durations(project: elements.Project, sim_count):
         durations = numpy.zeros(sim_count)
         for i in range(sim_count):
             durations[i] = DateGenerator.generate_project_completion_date(project)
             DateGenerator.project_reset(project)
         return durations
-
-    def linear_study(self, some_val):
-        pass
 
     @classmethod
     def generate_basic_result(cls, project, gate_name, maximum_duration):
@@ -288,12 +289,11 @@ class AlgorithmStudy:
 
         first_model = GaussianNB()
         first_model.fit(training_sample, training_labels)
-        print("Logistic Regression: Training set learned")
 
         predicted_labels = first_model.predict(training_sample)
         results["Gaussian"] = LabelStudy.generate_results(predicted_labels, training_labels)
 
-        second_model = sklearn.svm.SVC()
+        second_model = SVC()
         second_model.fit(training_sample, training_labels)
 
         second_predicted_labels = second_model.predict(training_sample)
@@ -324,7 +324,7 @@ class AlgorithmStudy:
             cls.model_run_through(first_model, "Gaussian", results, training_sample, training_labels)
             second_model = sklearn.svm.SVC()
             cls.model_run_through(second_model, "SVC", results, training_sample, training_labels)
-            third_model = MLPClassifier()
+            third_model = MLPClassifier(max_iter=1000)
             cls.model_run_through(third_model, "MLPClassifier", results, training_sample, training_labels)
 
     @classmethod

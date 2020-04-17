@@ -22,14 +22,14 @@ class Checker:
                 if len(project.precedence_constraints[node]["To"]) < 1:
                     stop += 1
             elif isinstance(node, ele.Lane):
-                start, stop = cls.check_lane(node, start, stop)
+                start, stop = cls._check_lane(node, start, stop)
 
             if start > 1 or stop > 1:
                 raise Exception(f"Too many start or stop gates.")
         return True
 
     @staticmethod
-    def check_lane(lane, start, stop):
+    def _check_lane(lane, start, stop):
         for node in lane.project_nodes:
             if isinstance(node, ele.Gate):
                 if len(lane.precedence_constraints[node.name]["From"]) < 1:

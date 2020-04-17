@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
+<title>Assignment 1: A New Control System</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: grey; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="assignment-1-a-new-control-system">
+<h1 class="title">Assignment 1: A New Control System</h1>
+
+<!-- Copyright 2020, Oskar T. Inderberg -->
+<p>This program provides design, troubleshooting and analysis of projects</p>
+<div class="section" id="getting-started">
+<h1>Getting Started</h1>
+<p>This Python program requires at least python 3.5.</p>
+<div class="section" id="features">
+<h2>Features</h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Project design with the following parts:</dt>
+<dd><ul class="first last">
+<li>Lanes containing gates and tasks</li>
+<li>Gates</li>
+<li>Tasks</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>Simulate project duration and generate probability of completion within the given time frame</li>
+<li>Regression simulation using multiple models</li>
+<li>HTML generation with probabilities and model accuracies.</li>
+<li>Validate project validity</li>
+<li>Tested code with high coverage</li>
+</ul>
+</div>
+<div class="section" id="assumptions">
+<h2>Assumptions</h2>
+<ul class="simple">
+<li>Project following the correct pattern using lanes as containers for tasks</li>
+<li>Gates in which to reference for simulations</li>
+<li>Correctly initiated constraints for all nodes</li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h2>Usage</h2>
+<p>This project comes with a <em>main.py</em> file which is the base for running the deployed system. From here one can set
+parameters as one want. For analysis of existing circuits import files into the data folder and load them.</p>
+<pre class="code bash literal-block">
+$ python main.py
+</pre>
+</div>
+</div>
+<div class="section" id="pumping-circuits">
+<h1>Pumping Circuits</h1>
+<p>This program tries to conform to the practices used in the previous assignment and keep to them in a strict fashion.
+Therefor a lot of the conventions used in this project will not be repeated in this README. These can be found in
+Assignment 1.</p>
+<div class="section" id="file-specifics">
+<h2>File specifics</h2>
+<div class="section" id="main-py">
+<h3>main.py</h3>
+<p>This is the file to be run by regular users for analysing circuits. It is run by using the function
+<tt class="docutils literal">default_project_study()</tt>. This can be edited to the users suited purpose.</p>
+<p>The main way to customize projects is changing the source file so it represents the project you need analyzed.</p>
+<p>Here one can edit the page_generator to simulate over the gate that one needs to simulate. One can also edit the
+simulation count depending on how many trials one wishes. As the standard attributes of a project such as median,
+averages durations are low computational costed they are done 10 times as many times. Dates is the last variable of
+page generator and contains the time limit the user has for a project. This can be edited just above the page generator.</p>
+</div>
+<div class="section" id="elements-py">
+<h3>elements.py</h3>
+<p>This module contains all elements needed for creating a project as well as the project structure itself.
+All classes are based on their designated abstractions as well as the top level <tt class="docutils literal">ProjectElement</tt> class.</p>
+<p><tt class="docutils literal">Node</tt> is an abstraction for both Gate and Task giving them ability to share many of the same traits. One of these is
+the member function factory which functions as a overall factory method for all node types. If one needed more node
+types one can adjust this factory away from the if else pattern giving the ability to create a lot more types.
+While the assignment recommended initiating nodes with a shared list of predecessors and successors an attempt was made
+to have all nodes be independent of each other and only to be accessed in a context such as lane or project. While this
+was done, it made some of the later processing hard had proved to be a time costly attempt.</p>
+<p><tt class="docutils literal">Container</tt> is an abstraction for project and lane and shares some traits with node. A change to optimize this would
+be to add these shared traits and functions to the <tt class="docutils literal">ProjectElement</tt> class. Examples of these are <tt class="docutils literal">name</tt> and
+<tt class="docutils literal">factory</tt>, however one can make the argument that as they are not supposed to be accessed on this abstract level they
+should be defined on the least abstract level and where they share the same use cases.
+Container contains the property <tt class="docutils literal">precedence_constraints</tt> which holds the constraints set for the project.</p>
+<p><tt class="docutils literal">PrecedenceConstraintsContainer</tt> is a class used in containers and is itself a container for the project constraints.
+This class functions as a dictionary for all the nodes, and can be accessed in this way. If a user has a node and
+it can be used to access the constraints coupled with it.</p>
+<pre class="code python literal-block">
+<span class="name">list_of_direct_predesessors</span> <span class="operator">=</span> <span class="name">project</span><span class="operator">.</span><span class="name">precedence_constraints</span><span class="punctuation">[</span><span class="name">node</span><span class="punctuation">][</span><span class="literal string double">&quot;From&quot;</span><span class="punctuation">]</span>
+<span class="name">list_of_direct_successors</span> <span class="operator">=</span> <span class="name">project</span><span class="operator">.</span><span class="name">precedence_constraints</span><span class="punctuation">[</span><span class="name">node</span><span class="punctuation">][</span><span class="literal string double">&quot;To&quot;</span><span class="punctuation">]</span>
+</pre>
+<p>One reminder is that this only gives back constraints in certain contexts. Some contexts do not contain next and
+previous nodes because these constraints are defined in an project or lane context. This decision also proved to make
+later processing more cumbersome and difficult.</p>
+</div>
+<div class="section" id="simulation-tools-py">
+<h3>simulation_tools.py</h3>
+<p>This file contains many generators which are used to generate different simulation results. <tt class="docutils literal">DurationGenerators</tt> is
+the used for ground level random number generation used to generate workloads for lanes and task durations.</p>
+<p><tt class="docutils literal">DateGenerator</tt> is used to generate dates for tasks and gates. These can be retrieved in order to find instance
+project due date and gate due dates. It also contains a function <tt class="docutils literal">project_reset</tt> which resets a project back to an
+uninstanced original state where <tt class="docutils literal">start_date</tt> and <tt class="docutils literal">completion_dates</tt> for all project nodes are set back to -1.</p>
+<p><tt class="docutils literal">MonteCarloSimulation</tt> is used for top level project simulation and contains the class function <tt class="docutils literal">Monte_Carlo_Basic</tt>
+which is its sole public function used outside of the file scope. It is used to generate results for the first part of
+the HTML page where durations of the project provided are the base data that need to be processed.
+This is also the function that generates the histogram.</p>
+<p><tt class="docutils literal">LabelStudy</tt> generates the labels used in assessing the performance of the chosen algorithms. It compares two lists
+of labels and returns a description of their successes.</p>
+<p><tt class="docutils literal">AlgorithmStudy</tt> is the base for assessing the performance of the machine learning algorithms. Its functions takes in
+a project, a gate name, a time limit and the amount of times to run the monte carlo simulation. It returns the results
+in the form set in <tt class="docutils literal">LabelStudy</tt>.</p>
+</div>
+<div class="section" id="page-generator-py">
+<h3>page_generator.py</h3>
+<p>This file is used for generating HTML reports for projects. It holds two classes, <tt class="docutils literal">HTMLSerializer</tt> and
+<tt class="docutils literal">HTMLPageGenerator</tt>. The first holds functions required for the latter. The latter is used in by main to generate a
+HTML study file which represents the circuit. It has two public functions which can be used, either with custom circuits
+or with the default circuit, which is <em>circuit.tsv</em> in <em>templates</em>. To simplify all HTML files and sources are in the
+same folder: <em>templates</em>.</p>
+</div>
+<div class="section" id="checker-py">
+<h3>checker.py</h3>
+<p>This file contains the <tt class="docutils literal">Checker</tt> class which can be used to check whether or not a project is viable. Its member
+function <tt class="docutils literal">check_project</tt> takes in a projects and assesses whether it contains more than one start and one end gate.</p>
+</div>
+<div class="section" id="src-printer-py">
+<h3>src.printer.py</h3>
+<p>Parser and printer works in much the same way. They take in some paths and either creates a project instance in the
+program or outputs</p>
+</div>
+<div class="section" id="circuit-control-py">
+<h3>circuit_control.py</h3>
+<p>This file contains the <tt class="docutils literal">CircuitControl</tt> class which is used to control circuits for faults. It is used by initializing
+a class instance and then called with the function <tt class="docutils literal">control_circuit</tt> which takes in a circuit and raises an exception
+if a rule is broken. If no rule is broken it returns <tt class="docutils literal">True</tt>.</p>
+</div>
+<div class="section" id="circuit-calculator-py">
+<h3>circuit_calculator.py</h3>
+<p>This file holds two classes. The first <tt class="docutils literal">CircuitFormulas</tt> contains all the formulas used for the different calculations
+used on a circuit. The second <tt class="docutils literal">CircuitCalculator</tt> is the class used for retrieving the different calculations.
+Modularizing the functions in such a way makes it easy to alter functions if needed and the calculator class remains
+readable. One might want to change the function names in <tt class="docutils literal">CircuitFormulas</tt> to make it more simple and flat.</p>
+<p>The class <tt class="docutils literal">CircuitFormulas</tt> contains a warning if the reynolds number exceeds 10^5. Remove the first if statement in
+<tt class="docutils literal">calculate_flow_coefficient()</tt> to remove the warning.</p>
+</div>
+<div class="section" id="study-py">
+<h3>study_.py</h3>
+<p>This file holds the class <tt class="docutils literal">Study</tt> which, after initialized, can be called with a study function. This class takes
+one argument and has one property, velocity. A study function
+utilizes the classes private functions to perform some studies on a circuit. A circuit should be designed and controlled
+before using these functions. If one is to create new studies they should be created as public member functions to be
+called from this class.</p>
+</div>
+</div>
+<div class="section" id="testing">
+<h2>Testing</h2>
+<p>As testing and quality control of existing code is a important part of managing code, this program is developed with
+the standard package unittest for testing. This gives the developer to easily and continuously test all parts of the
+code concurrently with development.</p>
+<p>To use this feature one has to:</p>
+<pre class="code bash literal-block">
+$ <span class="name builtin">cd</span> /path/to/project-dir/
+$ python -m unittest
+</pre>
+<p>Testing during this projects development is done using, as mentioned earlier, the packages <strong>unittest</strong> as well as
+<strong>coverage</strong>. Coverages gives the developer an overview of what lines of code has been run. The tests developed have
+tried to provide 100% line coverage to ensure that all lines have been tested and gives the expected response.</p>
+<p>Testing has also been done with coverage, and a report has been generated showing what lines have been tested and which
+have not been tested with the current method. All necessary tests have been run, but are not included in tests.</p>
+</div>
+<div class="section" id="modularisation">
+<h2>Modularisation</h2>
+<p>As this python program is composed of several modules and data sets it is departmentalized into different folders.
+Reviewing the project structure, it is composed of the folders data, tests and module, as well as a top facing
+main function. Basing the project such provides a clear overview and modularize's the project into easy accessible
+files without overwhelming the user.</p>
+<p>This is an attempt to create files which can be copied and pasted to new projects when needed. For example
+<em>file_handler.py</em> and <em>parser.py</em> are meant to be easily adapted for new projects. Furthermore modularizing classes
+which dont share inheritance seemed like a useful standard.</p>
+<!-- Compared to many other projects this project is modularized in quite a degree. -->
+</div>
+<div class="section" id="documentation-docstrings-and-annotations">
+<h2>Documentation, docstrings and annotations</h2>
+<p>In an attempt to develop this project in a more realistic manner, close to a real world open-source project I have
+tried to use the conventions of creating a README and use <a class="reference external" href="https://www.python.org/dev/peps/pep-0257/">docstrings</a>
+and <a class="reference external" href="https://www.python.org/dev/peps/pep-3107/">annotations</a>.</p>
+<p>These have been used to give new developers an idea of what a function takes in and outputs. Using with an IDE which
+supports docstrings helps developers in a great deal when sorting through use of the code.</p>
+<p>Discovering these conventions during development has led to some inconsistencies in the project.</p>
+<div class="section" id="afterthoughts">
+<h3>Afterthoughts</h3>
+<p>I should have decided on some conventions in the start of the project and kept to them. Refactoring and changing
+conventions midway was very time consuming and with led to a lot of issues.</p>
+<p>Consistency is key. When working on big projects, if one does not keep to decided standards it makes it hard to alter
+code after not using it for some time. In my case after reading about properties and factory functions, it may have
+saved me a lot of time not to adapt them until the next project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Author:</th><td class="field-body">Oskar T. Inderberg</td>
+</tr>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">1.0</td>
+</tr>
+<tr class="field"><th class="field-name">GitHub:</th><td class="field-body"><a class="reference external" href="https://github.com/Iskers/Assignment_1-Circuits">https://github.com/Iskers/Assignment_1-Circuits</a></td>
+</tr>
+<tr class="field"><th class="field-name">Date created:</th><td class="field-body">03.02.2020</td>
+</tr>
+<tr class="field"><th class="field-name">Last updated:</th><td class="field-body">08.03.2020</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

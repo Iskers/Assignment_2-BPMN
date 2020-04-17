@@ -70,8 +70,8 @@ class BPMNPrinter(Printer):
     def _xml_printer(self, file_target, project):
         tree = self._project_brancher(project)
         string = et.tostring(tree)
-        reparsed = minidom.parseString(string)
-        file_target.write(reparsed.toprettyxml(indent="  "))
+        re_parsed = minidom.parseString(string)
+        file_target.write(re_parsed.toprettyxml(indent="  "))
 
     def _project_brancher(self, project) -> et.ElementTree:
         root = et.Element("project", name=project.name)
@@ -102,14 +102,14 @@ class BPMNPrinter(Printer):
 
     @staticmethod
     def _task_brancher(root, task):
-        return et.SubElement(root, "task", {"name": task.name, "minimum-duration": task.minimum_duration,
-                                            "maximum-duration": task.maximum_duration})
+        return et.SubElement(root, "task", {"name": task.name, "minimum-duration": str(task.minimum_duration),
+                                            "maximum-duration": str(task.maximum_duration)})
 
     @staticmethod
     def _precedence_brancher(root, container: elements.Container):
         for node in container.precedence_constraints:
             for to in container.precedence_constraints[node]["To"]:
-                et.SubElement(root, "precedence-constraint", {"source": node, "target": to})
+                et.SubElement(root, "precedence-constraint", {"source": node.name, "target": to.name})
 
     def _tsv_line_printer(self, line: str, project):
         """Takes a line and appends it to a circuit"""

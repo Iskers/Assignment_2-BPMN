@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<project name="ControlSystem">
+  <gate name="begin"/>
+  <lane name="MethodologyGroup">
+    <task maximum-duration="20.0" minimum-duration="12.0" name="SpecifySystem"/>
+    <task maximum-duration="16.0" minimum-duration="8.0" name="DeploySystem"/>
+  </lane>
+  <lane name="HardwareGroup">
+    <task maximum-duration="24.0" minimum-duration="16.0" name="DesignHardware"/>
+    <task maximum-duration="16.0" minimum-duration="8.0" name="PrototypeHardware"/>
+    <task maximum-duration="6.0" minimum-duration="2.0" name="TestHardware"/>
+    <task maximum-duration="24.0" minimum-duration="16.0" name="ManufactureHardware"/>
+    <precedence-constraint source="DesignHardware" target="PrototypeHardware"/>
+    <precedence-constraint source="PrototypeHardware" target="TestHardware"/>
+    <precedence-constraint source="TestHardware" target="ManufactureHardware"/>
+  </lane>
+  <lane name="SoftwareGroup">
+    <task maximum-duration="40.0" minimum-duration="24.0" name="DesignSoftware"/>
+    <task maximum-duration="20.0" minimum-duration="16.0" name="ImproveSoftware"/>
+    <task maximum-duration="20.0" minimum-duration="16.0" name="ReleaseSoftware"/>
+    <precedence-constraint source="ImproveSoftware" target="ReleaseSoftware"/>
+  </lane>
+  <lane name="CertificationGroup">
+    <task maximum-duration="16.0" minimum-duration="8.0" name="DesignDocumentation"/>
+    <task maximum-duration="16.0" minimum-duration="8.0" name="DesignTraining"/>
+    <task maximum-duration="24.0" minimum-duration="12.0" name="PrepareCertification"/>
+    <task maximum-duration="16.0" minimum-duration="12.0" name="TrainOperators"/>
+    <task maximum-duration="40.0" minimum-duration="20.0" name="FinalizeCertification"/>
+    <precedence-constraint source="DesignDocumentation" target="DesignTraining"/>
+    <precedence-constraint source="DesignDocumentation" target="PrepareCertification"/>
+  </lane>
+  <gate name="MidProject"/>
+  <gate name="end"/>
+  <precedence-constraint source="begin" target="SpecifySystem"/>
+  <precedence-constraint source="SpecifySystem" target="DesignHardware"/>
+  <precedence-constraint source="SpecifySystem" target="DesignSoftware"/>
+  <precedence-constraint source="SpecifySystem" target="DesignDocumentation"/>
+  <precedence-constraint source="DesignSoftware" target="MidProject"/>
+  <precedence-constraint source="TestHardware" target="MidProject"/>
+  <precedence-constraint source="MidProject" target="ManufactureHardware"/>
+  <precedence-constraint source="MidProject" target="ImproveSoftware"/>
+  <precedence-constraint source="MidProject" target="TrainOperators"/>
+  <precedence-constraint source="MidProject" target="FinalizeCertification"/>
+  <precedence-constraint source="DesignTraining" target="MidProject"/>
+  <precedence-constraint source="PrepareCertification" target="MidProject"/>
+  <precedence-constraint source="ManufactureHardware" target="DeploySystem"/>
+  <precedence-constraint source="TrainOperators" target="DeploySystem"/>
+  <precedence-constraint source="FinalizeCertification" target="end"/>
+  <precedence-constraint source="DeploySystem" target="end"/>
+  <precedence-constraint source="ReleaseSoftware" target="DeploySystem"/>
+</project>
