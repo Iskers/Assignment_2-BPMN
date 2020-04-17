@@ -1,7 +1,7 @@
 .. Copyright 2020, Oskar T. Inderberg
 
 ==================================
-Assignment 1: A New Control System
+Assignment 2: A New Control System
 ==================================
 
 This program provides design, troubleshooting and analysis of projects
@@ -39,7 +39,7 @@ parameters as one want. For analysis of existing circuits import files into the 
     $ python main.py
 
 
-Pumping Circuits
+Control Systems
 ================
 This program tries to conform to the practices used in the previous assignment and keep to them in a strict fashion.
 Therefor a lot of the conventions used in this project will not be repeated in this README. These can be found in
@@ -132,97 +132,35 @@ function ``check_project`` takes in a projects and assesses whether it contains 
 src.printer.py
 ~~~~~~~~~~~~~~
 
-Parser and printer works in much the same way. They take in some paths and either creates a project instance in the
-program or outputs
+Parser and printer works in much the same way. They take in paths and either creates a project instance in the
+program or outputs a file containing a given project. Parser uses the same setup as in Assignment 1.
 
-circuit_control.py
-~~~~~~~~~~~~~~~~~~
-This file contains the ``CircuitControl`` class which is used to control circuits for faults. It is used by initializing
-a class instance and then called with the function ``control_circuit`` which takes in a circuit and raises an exception
-if a rule is broken. If no rule is broken it returns ``True``.
+The class ``Printer`` can be used using its member function as exemplified in ``test_printer.py`` and is used in the
+following manner:
 
-circuit_calculator.py
-~~~~~~~~~~~~~~~~~~~~~
-This file holds two classes. The first ``CircuitFormulas`` contains all the formulas used for the different calculations
-used on a circuit. The second ``CircuitCalculator`` is the class used for retrieving the different calculations.
-Modularizing the functions in such a way makes it easy to alter functions if needed and the calculator class remains
-readable. One might want to change the function names in ``CircuitFormulas`` to make it more simple and flat.
+.. code:: python
 
-The class ``CircuitFormulas`` contains a warning if the reynolds number exceeds 10^5. Remove the first if statement in
-``calculate_flow_coefficient()`` to remove the warning.
-
-study\_.py
-~~~~~~~~~~
-This file holds the class ``Study`` which, after initialized, can be called with a study function. This class takes
-one argument and has one property, velocity. A study function
-utilizes the classes private functions to perform some studies on a circuit. A circuit should be designed and controlled
-before using these functions. If one is to create new studies they should be created as public member functions to be
-called from this class.
-
-
-
-Testing
--------
-
-As testing and quality control of existing code is a important part of managing code, this program is developed with
-the standard package unittest for testing. This gives the developer to easily and continuously test all parts of the
-code concurrently with development.
-
-To use this feature one has to:
-
-.. code:: bash
-
-    $ cd /path/to/project-dir/
-    $ python -m unittest
-
-Testing during this projects development is done using, as mentioned earlier, the packages **unittest** as well as
-**coverage**. Coverages gives the developer an overview of what lines of code has been run. The tests developed have
-tried to provide 100% line coverage to ensure that all lines have been tested and gives the expected response.
-
-Testing has also been done with coverage, and a report has been generated showing what lines have been tested and which
-have not been tested with the current method. All necessary tests have been run, but are not included in tests.
-
-Modularisation
---------------
-
-As this python program is composed of several modules and data sets it is departmentalized into different folders.
-Reviewing the project structure, it is composed of the folders data, tests and module, as well as a top facing
-main function. Basing the project such provides a clear overview and modularize's the project into easy accessible
-files without overwhelming the user.
-
-This is an attempt to create files which can be copied and pasted to new projects when needed. For example
-*file_handler.py* and *parser.py* are meant to be easily adapted for new projects. Furthermore modularizing classes
-which dont share inheritance seemed like a useful standard.
-
-.. Compared to many other projects this project is modularized in quite a degree.
-
-Documentation, docstrings and annotations
-------------------------------------------
-
-In an attempt to develop this project in a more realistic manner, close to a real world open-source project I have
-tried to use the conventions of creating a README and use `docstrings <https://www.python.org/dev/peps/pep-0257/>`_
-and `annotations <https://www.python.org/dev/peps/pep-3107/>`_.
-
-These have been used to give new developers an idea of what a function takes in and outputs. Using with an IDE which
-supports docstrings helps developers in a great deal when sorting through use of the code.
-
-Discovering these conventions during development has led to some inconsistencies in the project.
-
-
+    printer_instance.print("Output_file.xml", "xml", False, some_project)
 
 Afterthoughts
 ~~~~~~~~~~~~~
-I should have decided on some conventions in the start of the project and kept to them. Refactoring and changing
-conventions midway was very time consuming and with led to a lot of issues.
 
-Consistency is key. When working on big projects, if one does not keep to decided standards it makes it hard to alter
-code after not using it for some time. In my case after reading about properties and factory functions, it may have
-saved me a lot of time not to adapt them until the next project.
+Following the given pattern is always useful as i experienced in the first project, however adhering to them can be
+quite time costly. If I had taken my time to create a more intuitive ground structure I would have saved myself a lot
+of headache and I would still be able to use the format i preferred.
 
+One of my early "smart" decisions was giving all nodes a shared list of nodes in which, upon initialization a node would
+add itself to this list. In addition if a node was to be deleted it would remove itself from the list. In the same way
+a node could call itself on the list and get its index in the list. With this index it could return the predecessors by
+slicing this same list using this same index. This solution is, in my opinion, a smart solution for a consecutive list,
+but does not work for projects with parallel nodes. It also doesnt work when using a shared global list if one needs
+to analyze or instance more than one project. However instead of changing to a more intuitive and simple solution i held
+on to it and tried to make it work. This proved tiresome and unviable and should have been scraped when the problems
+where discovered.
 
 :Author:
     Oskar T. Inderberg
 :Version:
     1.0
-:Date created: 03.02.2020
-:Last updated: 08.03.2020
+:Date created: 15.03.2020
+:Last updated: 17.04.2020
